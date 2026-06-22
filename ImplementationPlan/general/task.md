@@ -18,14 +18,14 @@ Reference plans:
 
 ---
 
-## Session 2 — Backend Core (config, state, DB)
+## Session 2 — Backend Core (config, state, DB) ✓
 
-- [ ] `backend/config.py` — typed constants grouped by concern (API, Server, Audio, Paths) + `load_prompt()` helper
-- [ ] `backend/state.py` — JarvisStatus enum, JarvisState dataclass, asyncio.Queue
-- [ ] `backend/db/models.py` — 3 SQLAlchemy ORM models (sessions, queries, results) — preferences handled by AGENTS.md
-- [ ] `backend/db/database.py` — sync engine, SessionLocal, get_db()
-- [ ] `backend/main.py` — FastAPI app skeleton + lifespan (DB init only, no audio yet)
-- [ ] Smoke test: `uv run uvicorn backend.main:app --reload` starts with no errors
+- [x] `backend/config.py` — typed constants grouped by concern (API, Server, Audio, Paths) + `load_prompt()` helper
+- [x] `backend/state.py` — JarvisStatus enum, JarvisState dataclass, asyncio.Queue
+- [x] `backend/db/models.py` — 3 SQLAlchemy ORM models (sessions, queries, results) — preferences handled by AGENTS.md
+- [x] `backend/db/database.py` — sync engine, SessionLocal, get_db()
+- [x] `backend/main.py` — FastAPI app skeleton + lifespan (DB init only, no audio yet)
+- [x] Smoke test: `uv run uvicorn backend.main:app --reload` starts with no errors
 
 ---
 
