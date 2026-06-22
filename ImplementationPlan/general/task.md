@@ -39,13 +39,13 @@ Reference plans:
 
 ---
 
-## Session 4 — Backend Agent & Tools
+## Session 4 — Backend Agent & Tools ✓
 
-- [ ] `backend/agent/tools/search.py` — tavily_search() callable
-- [ ] `backend/agent/tools/datetime_tool.py` — tell_time_date() callable
-- [ ] `backend/agent/tools/browser.py` — open_result() with regex + difflib
-- [ ] `backend/agent/jarvis_agent.py` — DeepAgent with FilesystemBackend + MemorySaver + memory=[AGENTS.md], system prompt loaded from file, thread_id for ACTIVE_WINDOW continuity
-- [ ] Manual test: run agent.run("what time is it?") in isolation → returns valid dict
+- [x] `backend/agent/tools/search.py` — tavily_search() callable
+- [x] `backend/agent/tools/datetime_tool.py` — tell_time_date() callable
+- [x] `backend/agent/tools/browser.py` — open_result() with regex + difflib
+- [x] `backend/agent/jarvis_agent.py` — DeepAgent with FilesystemBackend + MemorySaver + memory=[AGENTS.md], system prompt loaded from file, thread_id for ACTIVE_WINDOW continuity
+- [x] Manual test: run agent.run("what time is it?") in isolation → returns valid dict
 
 ---
 
