@@ -7,13 +7,13 @@ Reference plans:
 
 ---
 
-## Session 1 — Project Scaffold
+## Session 1 — Project Scaffold ✓
 
-- [ ] Create full folder structure (backend/, frontend/, all `__init__.py` files)
-- [ ] Create `backend/prompts/` with `system.md`, `greeting.txt`, `goodbye.txt` (content from backend plan)
-- [ ] Create `backend/agent_data/memories/` directory (`AGENTS.md` auto-created by agent on first run)
-- [ ] Initialise git repository + initial commit
-- [ ] Verify `pyproject.toml` is correct and `uv sync` installs cleanly
+- [x] Create full folder structure (backend/, frontend/, all `__init__.py` files)
+- [x] Create `backend/prompts/` with `system.md`, `greeting.txt`, `goodbye.txt` (content from backend plan)
+- [x] Create `backend/agent_data/memories/` directory (`AGENTS.md` auto-created by agent on first run)
+- [x] Initialise git repository + initial commit
+- [x] Verify `pyproject.toml` is correct and `uv sync` installs cleanly
 - [ ] Verify `.env` has all 3 API keys filled in
 
 ---

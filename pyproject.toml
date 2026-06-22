@@ -8,10 +8,11 @@ dependencies = [
     "uvicorn[standard]",
     "pvporcupine",
     "pvrecorder",
-    "openai-whisper",
+    "openai-whisper>=20250625",
     "edge-tts",
     "sounddevice",
     "numpy",
+    "setuptools",
     "deepagents",
     "langgraph",
     "langchain-google-genai",
@@ -21,12 +22,6 @@ dependencies = [
     "websockets",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "pytest",
-    "pytest-asyncio",
-]
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -34,8 +29,17 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["backend"]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "pytest",
     "pytest-asyncio",
 ]
+
+[tool.uv]
+# openai-whisper ships only as an sdist; its setup.py needs setuptools at build
+# time. numba>=0.61 is required for Python >=3.11 support.
+override-dependencies = ["numba>=0.61"]
+
+[tool.uv.extra-build-dependencies]
+openai-whisper = ["setuptools<72"]
+
