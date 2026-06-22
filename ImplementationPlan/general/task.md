@@ -14,7 +14,7 @@ Reference plans:
 - [x] Create `backend/agent_data/memories/` directory (`AGENTS.md` auto-created by agent on first run)
 - [x] Initialise git repository + initial commit
 - [x] Verify `pyproject.toml` is correct and `uv sync` installs cleanly
-- [ ] Verify `.env` has all 3 API keys filled in
+- [x] Verify `.env` has all 2 API keys filled in (Gemini + Tavily)
 
 ---
 
@@ -32,10 +32,10 @@ Reference plans:
 ## Session 3 — Backend Audio Pipeline
 
 - [ ] `backend/audio/speaker.py` — edge-tts → WAV temp file → sounddevice playback
-- [ ] `backend/audio/wake_word.py` — Porcupine + pvrecorder blocking loop
+- [ ] `backend/audio/wake_word.py` — openWakeWord + sounddevice blocking loop ("hey Jarvis")
 - [ ] `backend/audio/listener.py` — VAD (RMS), Whisper transcription, amplitude streaming
 - [ ] Wire audio thread into `main.py` lifespan startup
-- [ ] Manual test: say "Jarvis" → greeting plays through speakers
+- [ ] Manual test: say "hey Jarvis" → greeting plays through speakers
 
 ---
 

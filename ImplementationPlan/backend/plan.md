@@ -5,7 +5,7 @@
 | Concern | Decision |
 |---|---|
 | Audio daemon | `threading.Thread` started at FastAPI lifespan, bridges to async via `asyncio.Queue` |
-| Mic capture | `pvrecorder` — Picovoice's recorder, pairs exactly with Porcupine |
+| Mic capture | `sounddevice` — captures 80ms frames for openWakeWord + VAD |
 | End-of-speech | Silence-based VAD: RMS energy per frame, 1.5s silence → stop recording |
 | TTS playback | `edge-tts` → WAV temp file → `sounddevice` (no ffmpeg, no browser) |
 | Waveform data | Backend streams RMS float via WS `amplitude` message every ~50ms |
@@ -109,6 +109,7 @@ dependencies = [
   # --- Audio ---
   WHISPER_MODEL      = os.getenv("WHISPER_MODEL", "base")
   TTS_VOICE          = os.getenv("TTS_VOICE", "en-GB-RyanNeural")
+  WAKE_WORD_THRESHOLD = float(os.getenv("WAKE_WORD_THRESHOLD", "0.5"))
   SPEECH_THRESHOLD   = float(os.getenv("SPEECH_THRESHOLD", "0.02"))
   SILENCE_THRESHOLD  = float(os.getenv("SILENCE_THRESHOLD", "0.01"))
   SILENCE_FRAMES     = int(os.getenv("SILENCE_FRAMES", "24"))   # 1.5s @ ~16fps
@@ -129,9 +130,11 @@ dependencies = [
 - Audio thread writes via `loop.call_soon_threadsafe(queue.put_nowait, msg)`
 
 ### `audio/wake_word.py`
-- Init `pvrecorder.PvRecorder` and `pvporcupine.create(access_key=..., keywords=["jarvis"])`
-- Blocking loop: `recorder.read()` → `porcupine.process(frame)` → if result `>= 0`: wake word detected
-- On detection: put `{"type": "state_change", "payload": {"state": "GREETING"}}` on queue
+- Init `openwakeword.Model(wakeword_models=["hey_jarvis"], inference_framework="onnx")`
+- Mic capture via `sounddevice.InputStream(samplerate=16000, channels=1, dtype="int16", blocksize=1280)`
+  - `CHUNK = 1280` → 80ms frames at 16kHz, the frame size openWakeWord expects
+- Blocking loop: `stream.read(CHUNK)` → `oww.predict(audio.flatten())` → check `score["hey_jarvis"] >= WAKE_WORD_THRESHOLD`
+- On detection: `oww.reset()` (prevent re-triggering), then put `{"type": "state_change", "payload": {"state": "GREETING"}}` on queue
 - Call `speaker.speak(greeting_text)` then signal transition to LISTENING state
 
 ### `audio/listener.py`
