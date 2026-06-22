@@ -17,8 +17,8 @@ Read it before touching either codebase.
 │  │  ┌─────────────┐     asyncio.Queue                        │  │
 │  │  │ Audio Thread │ ─────────────────────────────────┐      │  │
 │  │  │             │                                   │      │  │
-│  │  │ pvrecorder  │                                   ▼      │  │
-│  │  │ Porcupine   │                    ┌──────────────────┐  │  │
+│  │  │ sounddevice │                                   ▼      │  │
+│  │  │ openWakeWord│                    ┌──────────────────┐  │  │
 │  │  │ Whisper STT │                    │  FastAPI App     │  │  │
 │  │  │ edge-tts    │                    │                  │  │  │
 │  │  │ sounddevice │                    │  GET /ws         │  │  │
@@ -255,7 +255,7 @@ preferences
 
 | Component | Failure | Behaviour |
 |---|---|---|
-| Porcupine | Invalid access key | Log to stderr on startup, exit with clear message |
+| openWakeWord | Model file missing / load error | Log to stderr on startup, exit with clear message |
 | Whisper | Transcription fails | Return empty string, loop back to LISTENING |
 | Gemini API | Timeout / rate limit | Return safe default response dict, TTS the error |
 | Tavily | Search fails | Return JSON error string, agent falls back to knowledge |

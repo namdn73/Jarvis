@@ -10,7 +10,7 @@ speaks a summary back, and displays results as cards in a React UI.
 
 | Concern | Library / Tool |
 |---|---|
-| Wake word | `pvporcupine` — "Jarvis" keyword, Picovoice free tier |
+| Wake word | `openwakeword` — "hey Jarvis" keyword, free, no API key |
 | STT | `openai-whisper` — `base` model, CPU only (no GPU on dev machine) |
 | TTS | `edge-tts` — voice: `en-GB-RyanNeural` |
 | Agent | `deepagents` (LangChain DeepAgent on LangGraph) |
@@ -126,7 +126,6 @@ cd frontend && npm install <package>
 
 | Key | Purpose | Where to get |
 |---|---|---|
-| `PICOVOICE_ACCESS_KEY` | Porcupine wake word | console.picovoice.ai — free tier |
 | `GEMINI_API_KEY` | gemini-2.0-flash LLM | aistudio.google.com — free tier |
 | `TAVILY_API_KEY` | Web search | tavily.com — free tier |
 
