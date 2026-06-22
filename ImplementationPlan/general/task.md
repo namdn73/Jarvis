@@ -31,11 +31,11 @@ Reference plans:
 
 ## Session 3 — Backend Audio Pipeline
 
-- [ ] `backend/audio/speaker.py` — edge-tts → WAV temp file → sounddevice playback
-- [ ] `backend/audio/wake_word.py` — openWakeWord + sounddevice blocking loop ("hey Jarvis")
-- [ ] `backend/audio/listener.py` — VAD (RMS), Whisper transcription, amplitude streaming
-- [ ] Wire audio thread into `main.py` lifespan startup
-- [ ] Manual test: say "hey Jarvis" → greeting plays through speakers
+- [x] `backend/audio/speaker.py` — edge-tts → WAV temp file → sounddevice playback
+- [x] `backend/audio/wake_word.py` — openWakeWord + sounddevice blocking loop ("hey Jarvis")
+- [x] `backend/audio/listener.py` — VAD (RMS), Whisper transcription, amplitude streaming
+- [x] Wire audio thread into `main.py` lifespan startup
+- [x] Manual test: say "hey Jarvis" → greeting plays through speakers
 
 ---
 

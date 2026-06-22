@@ -10,6 +10,7 @@ dependencies = [
     "openai-whisper>=20250625",
     "edge-tts",
     "sounddevice",
+    "soundfile",
     "numpy",
     "setuptools",
     "deepagents",
