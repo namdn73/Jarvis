@@ -69,14 +69,14 @@ Reference plans:
 
 ---
 
-## Session 6 — Backend Tests
+## Session 6 — Backend Tests ✓
 
-- [ ] `tests/test_state.py` — JarvisStatus transitions
-- [ ] `tests/test_tools.py` — tavily_search, tell_time_date, open_result (mocked)
-- [ ] `tests/test_agent.py` — agent.run() with mocked ainvoke
-- [ ] `tests/test_websocket.py` — queue → WS broadcast
-- [ ] `tests/test_routes.py` — /health, /history, /preferences
-- [ ] `uv run pytest` — all tests pass
+- [x] `tests/test_state.py` — JarvisStatus transitions
+- [x] `tests/test_tools.py` — tavily_search, tell_time_date, open_result (mocked)
+- [x] `tests/test_agent.py` — agent.run() with mocked ainvoke
+- [x] `tests/test_websocket.py` — queue → WS broadcast
+- [x] `tests/test_routes.py` — /health, /history, /preferences
+- [x] `uv run pytest` — all tests pass
 
 ---
 
