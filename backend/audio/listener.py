@@ -21,14 +21,22 @@ def _put(loop, msg: dict) -> None:
     loop.call_soon_threadsafe(message_queue.put_nowait, msg)
 
 
-def listen(stream: sd.InputStream, loop, whisper_model) -> str:
+def listen(
+    stream: sd.InputStream,
+    loop,
+    whisper_model,
+    timeout_s: int | None = None,
+) -> str:
     """
     VAD-based speech capture followed by Whisper transcription.
 
     Reads CHUNK frames from the already-open InputStream, emits amplitude
-    messages, and returns the transcribed text.  Returns "" on 10s timeout
+    messages, and returns the transcribed text.  Returns "" on timeout
     (no speech detected) or transcription failure.
+
+    timeout_s overrides LISTEN_TIMEOUT_S (used by ACTIVE_WINDOW to get 30s).
     """
+    effective_timeout = timeout_s if timeout_s is not None else LISTEN_TIMEOUT_S
     speech_started = False
     silence_count = 0
     audio_buffer: list[np.ndarray] = []
@@ -36,8 +44,8 @@ def listen(stream: sd.InputStream, loop, whisper_model) -> str:
 
     try:
         while True:
-            # Timeout: 10s with no speech → signal caller to say goodbye
-            if not speech_started and (time.monotonic() - start_time) > LISTEN_TIMEOUT_S:
+            # Timeout: no speech within the allowed window → signal caller
+            if not speech_started and (time.monotonic() - start_time) > effective_timeout:
                 return ""
 
             data, _ = stream.read(CHUNK)

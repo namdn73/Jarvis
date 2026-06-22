@@ -1,4 +1,5 @@
 import asyncio
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -9,9 +10,23 @@ import soundfile as sf
 
 from backend.config import TTS_VOICE
 
+# Splits on sentence boundaries so each sentence is synthesised and played
+# independently — the user hears the first sentence after ~0.3s instead of
+# waiting for the full response to be generated.
+_SENTENCE_RE = re.compile(r'(?<=[.!?])\s+')
+
 
 def speak(text: str) -> None:
-    """Speak text via edge-tts through the system audio device. Blocks until done."""
+    """Split text into sentences and play each one as soon as it is synthesised."""
+    sentences = [s for s in _SENTENCE_RE.split(text.strip()) if s]
+    if not sentences:
+        return
+    for sentence in sentences:
+        _speak_one(sentence)
+
+
+def _speak_one(text: str) -> None:
+    """Synthesise and play a single sentence. Skips silently on any error."""
     try:
         asyncio.run(_synthesize_and_play(text))
     except Exception as exc:
@@ -19,7 +34,7 @@ def speak(text: str) -> None:
 
 
 async def _synthesize_and_play(text: str) -> None:
-    """Synthesise audio with edge-tts, write to temp MP3, decode, and play."""
+    """Generate audio via edge-tts, write to temp MP3, decode, play, delete."""
     tmp = tempfile.NamedTemporaryFile(suffix=".mp3", delete=False)
     tmp_path = Path(tmp.name)
     tmp.close()

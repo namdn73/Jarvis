@@ -107,12 +107,12 @@ dependencies = [
   BACKEND_PORT = int(os.getenv("BACKEND_PORT", "8000"))
 
   # --- Audio ---
-  WHISPER_MODEL      = os.getenv("WHISPER_MODEL", "base")
+  WHISPER_MODEL      = os.getenv("WHISPER_MODEL", "tiny")   # tiny=~0.5s, base=~2-3s CPU
   TTS_VOICE          = os.getenv("TTS_VOICE", "en-GB-RyanNeural")
   WAKE_WORD_THRESHOLD = float(os.getenv("WAKE_WORD_THRESHOLD", "0.5"))
   SPEECH_THRESHOLD   = float(os.getenv("SPEECH_THRESHOLD", "0.02"))
   SILENCE_THRESHOLD  = float(os.getenv("SILENCE_THRESHOLD", "0.01"))
-  SILENCE_FRAMES     = int(os.getenv("SILENCE_FRAMES", "24"))   # 1.5s @ ~16fps
+  SILENCE_FRAMES     = int(os.getenv("SILENCE_FRAMES", "12"))   # 0.96s silence → stop (was 24=1.92s)
   LISTEN_TIMEOUT_S   = int(os.getenv("LISTEN_TIMEOUT_S", "10"))
   ACTIVE_WINDOW_S    = int(os.getenv("ACTIVE_WINDOW_S", "30"))
 
@@ -151,12 +151,13 @@ dependencies = [
 - Put `{"type": "transcript", "payload": {"text": transcript}}` on queue
 
 ### `audio/speaker.py`
-- `async def speak(text: str) -> None`
-- Use `edge-tts` with `Communicate(text, voice=TTS_VOICE)` to save audio as `.wav` to a temp file
-  (edge-tts supports WAV output — avoids MP3 decoding entirely)
-- `sounddevice.play(data, samplerate)` then `sounddevice.wait()` to block until done
-- Delete temp file after playback
-- Wrap in try/except — on failure log to stderr, do not crash the pipeline
+- `def speak(text: str) -> None` — public entry point, splits text into sentences
+- `def _speak_one(text: str) -> None` — generates and plays a single sentence
+  - `asyncio.run(_synthesize_and_play(text))`
+  - `async def _synthesize_and_play(text)` — edge-tts → temp MP3 → `soundfile.read` → `sounddevice.play/wait` → delete
+- Sentence split with `re.split(r'(?<=[.!?])\s+', text)` — user hears first sentence after ~0.3s instead of waiting for full TTS generation
+- Each sentence is ~0.3-0.5s to generate, ~1-1.5s to play — pipeline overlaps naturally
+- Wrap each `_speak_one` in try/except — failure of one sentence does not crash the rest
 
 ### `agent/jarvis_agent.py`
 - `create_deep_agent` returns a `CompiledStateGraph` — supports `.ainvoke()`
@@ -167,17 +168,43 @@ dependencies = [
 - `memory=["/memories/AGENTS.md"]` — agent reads/writes its own preference file
 - Tools: `[tavily_search, tell_time_date]` as plain callables
   - `browser.open_result` is NOT a DeepAgent tool — handled locally before agent is called
-  - DeepAgent built-ins (`write_todos`, `ls`, etc.) are injected but won't be invoked for Jarvis queries
+- **HarnessProfile registered before `create_deep_agent`** to strip unused built-in tools:
+  - Excludes: `write_todos`, `ls`, `read_file`, `write_file`, `edit_file`, `glob`, `grep`, `execute`
+  - Disables general-purpose subagent (removes `task` delegation overhead)
+  - Adds `system_prompt_suffix` instructing direct, immediate responses
+  - Result: Gemini only sees Jarvis's 2 tools → ~0.5s latency reduction
 
 ```python
-from deepagents import create_deep_agent
+from deepagents import (
+    GeneralPurposeSubagentProfile,
+    HarnessProfile,
+    create_deep_agent,
+    register_harness_profile,
+)
 from deepagents.backends.filesystem import FilesystemBackend
 from langgraph.checkpoint.memory import MemorySaver
 from backend.config import MODEL_AGENT, AGENT_DATA_DIR, load_prompt
 from backend.agent.tools.search import tavily_search
 from backend.agent.tools.datetime_tool import tell_time_date
 
-_backend     = FilesystemBackend(root_dir=str(AGENT_DATA_DIR))
+# Strip all built-in harness tools so Gemini only sees our 2 custom tools
+register_harness_profile(
+    MODEL_AGENT,
+    HarnessProfile(
+        excluded_tools=frozenset({
+            "write_todos", "ls", "read_file", "write_file",
+            "edit_file", "glob", "grep", "execute",
+        }),
+        system_prompt_suffix=(
+            "Answer queries directly and immediately. "
+            "Do not plan. Do not write todos. "
+            "Respond in one pass without intermediate steps."
+        ),
+        general_purpose_subagent=GeneralPurposeSubagentProfile(enabled=False),
+    ),
+)
+
+_backend      = FilesystemBackend(root_dir=str(AGENT_DATA_DIR))
 _checkpointer = MemorySaver()
 _agent = create_deep_agent(
     model=MODEL_AGENT,

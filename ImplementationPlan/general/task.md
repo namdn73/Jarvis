@@ -49,13 +49,23 @@ Reference plans:
 
 ---
 
-## Session 5 — Backend API & WebSocket
+## Session 5 — Backend API & WebSocket ✓
 
-- [ ] `backend/api/websocket.py` — WS endpoint, queue consumer loop, broadcast
-- [ ] `backend/api/routes.py` — /health, /history, /preferences endpoints
-- [ ] Wire WebSocket + routes into `main.py`
-- [ ] Wire full pipeline: wake word → agent → WS broadcast
-- [ ] Manual test: open DevTools → WS tab → say "Jarvis" → verify all 5 message types appear
+- [x] `backend/api/websocket.py` — WS endpoint, queue consumer loop, broadcast
+- [x] `backend/api/routes.py` — /health, /history, /preferences endpoints
+- [x] Wire WebSocket + routes into `main.py`
+- [x] Wire full pipeline: wake word → agent → WS broadcast
+- [x] Manual test: open DevTools → WS tab → say "Jarvis" → verify all 5 message types appear
+
+---
+
+## Session 5B — Backend Latency Optimizations
+
+- [x] `.env`: set `WHISPER_MODEL=tiny` and `SILENCE_FRAMES=12`
+- [x] `backend/agent/jarvis_agent.py`: add `register_harness_profile` block to exclude built-in DeepAgent tools and disable subagent
+- [x] `backend/audio/speaker.py`: split `speak()` into sentence loop + `_speak_one()` for streaming TTS
+- [ ] Manual test: say "hey Jarvis, what time is it?" — full round-trip under 3s
+- [ ] Manual test: say "hey Jarvis, what's the latest AI news?" — first TTS sentence plays while cards load
 
 ---
 
