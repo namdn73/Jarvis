@@ -22,6 +22,12 @@ speaks a summary back, and displays results as cards in a React UI.
 | Package mgr | `uv` (Python), `npm` (frontend) |
 | Deployment | Native Windows — no Docker |
 
+## Task Roadmap
+
+Track implementation progress session by session:
+
+- **Master task list (all sessions)** → [ImplementationPlan/general/task.md](ImplementationPlan/general/task.md)
+
 ## Implementation Plans
 
 Before implementing any module, read the relevant plan file first:
@@ -30,7 +36,93 @@ Before implementing any module, read the relevant plan file first:
 - **Backend implementation** → [ImplementationPlan/backend/plan.md](ImplementationPlan/backend/plan.md)
 - **Frontend implementation** → [ImplementationPlan/frontend/plan.md](ImplementationPlan/frontend/plan.md)
 
-> Project folder structure will be added here after the structure discussion.
+## Project Folder Structure
+
+```
+project/
+├── CLAUDE.md
+├── README.md
+├── pyproject.toml
+├── uv.lock
+├── jarvis.db                        ← SQLite database (auto-created)
+├── .env                             ← GEMINI_API_KEY, TAVILY_API_KEY
+├── .env.example
+├── ImplementationPlan/
+│   ├── general/
+│   │   ├── architecture.md
+│   │   └── task.md
+│   ├── backend/
+│   │   └── plan.md
+│   └── frontend/
+│       └── plan.md
+├── backend/
+│   ├── __init__.py
+│   ├── config.py                    ← typed constants + load_prompt()
+│   ├── state.py                     ← JarvisStatus enum, JarvisState, message_queue
+│   ├── main.py                      ← FastAPI app, lifespan, static file serving
+│   ├── agent/
+│   │   ├── __init__.py
+│   │   ├── jarvis_agent.py          ← DeepAgent with MemorySaver + FilesystemBackend
+│   │   └── tools/
+│   │       ├── __init__.py
+│   │       ├── search.py            ← tavily_search()
+│   │       ├── datetime_tool.py     ← tell_time_date()
+│   │       └── browser.py          ← open_result()
+│   ├── agent_data/
+│   │   └── memories/
+│   │       └── AGENTS.md           ← persistent agent memory (auto-managed)
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── routes.py               ← /health, /history, /preferences
+│   │   └── websocket.py            ← /ws WebSocket endpoint
+│   ├── audio/
+│   │   ├── __init__.py
+│   │   ├── wake_word.py            ← openWakeWord loop + full state machine
+│   │   ├── listener.py             ← VAD + Whisper transcription
+│   │   └── speaker.py              ← edge-tts sentence-streaming TTS
+│   ├── db/
+│   │   ├── __init__.py
+│   │   ├── database.py             ← SQLAlchemy engine, get_db()
+│   │   └── models.py               ← DbSession, DbQuery, DbResult
+│   └── prompts/
+│       ├── system.md               ← agent system prompt
+│       ├── greeting.txt
+│       └── goodbye.txt
+├── frontend/
+│   ├── index.html
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── vite.config.ts
+│   ├── dist/                       ← production build (served by FastAPI at /)
+│   └── src/
+│       ├── main.tsx
+│       ├── App.tsx                 ← IDLE/ACTIVE layout, WS wiring
+│       ├── index.css
+│       ├── types.ts                ← JarvisStatus, ResultItem, WsMessage, JarvisState
+│       ├── context/
+│       │   └── JarvisContext.tsx   ← useReducer + Context + useJarvis hook
+│       ├── hooks/
+│       │   ├── useWebSocket.ts     ← native WS, reconnect, dispatch
+│       │   └── useMouseActivity.ts ← mousemove → ACTIVE layout
+│       ├── components/
+│       │   ├── SphereCanvas.tsx    ← Fibonacci sphere (fullscreen IDLE orb)
+│       │   ├── WaveformCanvas.tsx  ← rolling amplitude bar chart
+│       │   ├── StatusBadge.tsx     ← colour-coded state indicator
+│       │   ├── ResultCard.tsx      ← dark panel card with hover glow
+│       │   ├── ConversationLog.tsx ← chat log with auto-scroll
+│       │   ├── LeftPanel.tsx       ← orb + badge + waveform + log
+│       │   └── RightPanel.tsx      ← card grid with stagger fade-in
+│       └── tests/
+│           ├── reducer.test.ts
+│           └── useWebSocket.test.ts
+└── tests/                          ← backend pytest suite (42 tests)
+    ├── __init__.py
+    ├── test_state.py
+    ├── test_tools.py
+    ├── test_agent.py
+    ├── test_websocket.py
+    └── test_routes.py
+```
 
 ## Voice Interaction Flow
 

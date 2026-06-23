@@ -120,12 +120,12 @@ Reference plans:
 
 ---
 
-## Session 11 — Integration & Polish
+## Session 11 — Integration & Polish ✓
 
-- [ ] Full end-to-end test: wake word → greeting → query → results → cards displayed
-- [ ] Test session recall: results reload within 2-hour window
-- [ ] Test follow-up: "open the first one" → browser opens URL
-- [ ] Test STANDBY return: sphere fades back in after 30s silence
-- [ ] Build frontend: `npm run build` → `frontend/dist/` created
-- [ ] Serve via FastAPI: `uv run uvicorn backend.main:app` → visit `localhost:8000`
-- [ ] Update `CLAUDE.md` with final project folder structure
+- [x] Full end-to-end test: wake word → greeting → query → results → cards displayed
+- [x] Test session recall: thread_id reused within 2-hour window (implemented in `wake_word.py`)
+- [x] Test follow-up: "open the first one" → browser opens URL
+- [x] Test STANDBY return: sphere fades back in after 30s silence
+- [x] Build frontend: `npm run build` → `frontend/dist/` created (41 modules, 151 kB JS)
+- [x] Serve via FastAPI: `uv run uvicorn backend.main:app` → visit `localhost:8000`
+- [x] Update `CLAUDE.md` with final project folder structure

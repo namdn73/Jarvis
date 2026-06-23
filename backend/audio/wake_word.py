@@ -1,6 +1,7 @@
 import asyncio
 import re
 import sys
+import time
 import uuid
 from datetime import datetime
 
@@ -11,10 +12,14 @@ from backend.agent import jarvis_agent
 from backend.agent.tools.browser import open_result
 from backend.audio.listener import CHUNK, listen
 from backend.audio.speaker import speak
-from backend.config import ACTIVE_WINDOW_S, WAKE_WORD_THRESHOLD, load_prompt
+from backend.config import ACTIVE_WINDOW_S, SESSION_RECALL_WINDOW, WAKE_WORD_THRESHOLD, load_prompt
 from backend.db.database import get_db
 from backend.db.models import DbQuery, DbResult, DbSession
 from backend.state import JarvisStatus, message_queue, state
+
+# Session recall: persist the last thread_id across wake events within the recall window
+_last_thread_id: str | None = None
+_last_session_end: float = 0.0
 
 # Matches "open (one/1/two/2/…)" — handled locally without invoking the agent
 OPEN_PATTERN = re.compile(r"\bopen\b.*(one|two|three|four|five|[1-5])\b", re.IGNORECASE)
@@ -156,7 +161,14 @@ def audio_loop(loop: asyncio.AbstractEventLoop, whisper_model) -> None:
                 except Exception as exc:
                     print(f"[wake_word] failed to create DB session: {exc}", file=sys.stderr)
 
-                thread_id = str(uuid.uuid4())
+                # Reuse the previous thread_id if within the recall window so the
+                # agent retains context from the last session (same MemorySaver slot).
+                global _last_thread_id, _last_session_end
+                if _last_thread_id and (time.monotonic() - _last_session_end) < SESSION_RECALL_WINDOW:
+                    thread_id = _last_thread_id
+                    print(f"[wake_word] session recall — reusing thread {thread_id}", file=sys.stderr)
+                else:
+                    thread_id = str(uuid.uuid4())
 
                 # ── LISTENING ────────────────────────────────────────────
                 state.status = JarvisStatus.LISTENING
@@ -196,6 +208,8 @@ def audio_loop(loop: asyncio.AbstractEventLoop, whisper_model) -> None:
                         state.status = JarvisStatus.ACTIVE_WINDOW
                         _put(loop, {"type": "state_change", "payload": {"state": JarvisStatus.ACTIVE_WINDOW.value}})
 
+                _last_thread_id = thread_id
+                _last_session_end = time.monotonic()
                 _close_db_session(db_session_id)
                 state.status = JarvisStatus.STANDBY
                 _put(loop, {"type": "state_change", "payload": {"state": JarvisStatus.STANDBY.value}})
