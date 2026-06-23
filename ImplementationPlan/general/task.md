@@ -112,11 +112,11 @@ Reference plans:
 
 ---
 
-## Session 10 — Frontend Tests
+## Session 10 — Frontend Tests ✓
 
-- [ ] `frontend/src/tests/reducer.test.ts` — all 5 WS message type transitions
-- [ ] `frontend/src/tests/useWebSocket.test.ts` — connect, dispatch, reconnect logic
-- [ ] `npm run test` — all tests pass
+- [x] `frontend/src/tests/reducer.test.ts` — all 5 WS message type transitions
+- [x] `frontend/src/tests/useWebSocket.test.ts` — connect, dispatch, reconnect logic
+- [x] `npm run test` — all tests pass
 
 ---
 

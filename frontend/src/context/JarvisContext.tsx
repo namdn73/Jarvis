@@ -9,7 +9,7 @@ const initialState: JarvisState = {
   log: [],
 }
 
-function jarvisReducer(state: JarvisState, message: WsMessage): JarvisState {
+export function jarvisReducer(state: JarvisState, message: WsMessage): JarvisState {
   switch (message.type) {
     case 'state_change':
       return { ...state, status: message.payload.state }
