@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { JarvisProvider, useJarvis } from './context/JarvisContext'
 import { useWebSocket } from './hooks/useWebSocket'
 import { useMouseActivity } from './hooks/useMouseActivity'
+import SphereCanvas from './components/SphereCanvas'
+import WaveformCanvas from './components/WaveformCanvas'
 
 type Layout = 'IDLE' | 'ACTIVE'
 
@@ -18,16 +20,20 @@ function AppInner() {
   }, [state.status])
 
   return (
-    <div className="w-screen h-screen bg-jarvis-bg text-white font-inter flex items-center justify-center">
-      <div className="text-center">
-        <div className="text-jarvis-cyan font-orbitron text-4xl font-bold tracking-widest mb-4">
-          JARVIS
+    <div className="w-screen h-screen bg-jarvis-bg text-white font-inter">
+      {/* Session 8 visual test — replaced by full layout in Session 9 */}
+      <div className="w-full h-3/4">
+        <SphereCanvas mode="fullscreen" />
+      </div>
+      <div className="w-full h-1/4 flex items-center gap-4 px-4">
+        <div className="w-[120px] h-[120px] flex-shrink-0">
+          <SphereCanvas mode="orb" />
         </div>
-        <div className="text-jarvis-cyan font-orbitron text-sm tracking-wider opacity-70">
+        <div className="flex-1 h-full">
+          <WaveformCanvas />
+        </div>
+        <div className="text-jarvis-cyan font-orbitron text-xs tracking-wider opacity-70 flex-shrink-0">
           {connected ? state.status : 'DISCONNECTED'}
-        </div>
-        <div className="mt-2 text-xs text-white/30 font-inter">
-          {layout === 'IDLE' ? 'Move mouse to activate' : 'Active'}
         </div>
       </div>
     </div>

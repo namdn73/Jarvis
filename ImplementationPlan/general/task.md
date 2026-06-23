@@ -93,11 +93,11 @@ Reference plans:
 
 ---
 
-## Session 8 — Frontend Canvas Components
+## Session 8 — Frontend Canvas Components ✓
 
-- [ ] `frontend/src/components/SphereCanvas.tsx` — Fibonacci sphere, rotation, glow, pulse
-- [ ] `frontend/src/components/WaveformCanvas.tsx` — rolling amplitude buffer, bar chart
-- [ ] Visual test: sphere rotates on black background, waveform animates with mock data
+- [x] `frontend/src/components/SphereCanvas.tsx` — Fibonacci sphere, rotation, glow, pulse
+- [x] `frontend/src/components/WaveformCanvas.tsx` — rolling amplitude buffer, bar chart
+- [x] Visual test: sphere rotates on black background, waveform animates with mock data
 
 ---
 
