@@ -101,14 +101,14 @@ Reference plans:
 
 ---
 
-## Session 9 — Frontend UI Components
+## Session 9 — Frontend UI Components ✓
 
-- [ ] `frontend/src/components/StatusBadge.tsx` — colour map for all 6 states
-- [ ] `frontend/src/components/ResultCard.tsx` — dark panel, hover glow, open link
-- [ ] `frontend/src/components/ConversationLog.tsx` — chat entries, auto-scroll
-- [ ] `frontend/src/components/LeftPanel.tsx` — orb + badge + waveform + log
-- [ ] `frontend/src/components/RightPanel.tsx` — card list, fade-in stagger, skeleton
-- [ ] `frontend/src/App.tsx` — IDLE/ACTIVE layout switch, mouse wake, WS integration
+- [x] `frontend/src/components/StatusBadge.tsx` — colour map for all 6 states
+- [x] `frontend/src/components/ResultCard.tsx` — dark panel, hover glow, open link
+- [x] `frontend/src/components/ConversationLog.tsx` — chat entries, auto-scroll
+- [x] `frontend/src/components/LeftPanel.tsx` — orb + badge + waveform + log
+- [x] `frontend/src/components/RightPanel.tsx` — card list, fade-in stagger, skeleton
+- [x] `frontend/src/App.tsx` — IDLE/ACTIVE layout switch, mouse wake, WS integration
 
 ---
 

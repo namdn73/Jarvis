@@ -3,7 +3,8 @@ import { JarvisProvider, useJarvis } from './context/JarvisContext'
 import { useWebSocket } from './hooks/useWebSocket'
 import { useMouseActivity } from './hooks/useMouseActivity'
 import SphereCanvas from './components/SphereCanvas'
-import WaveformCanvas from './components/WaveformCanvas'
+import LeftPanel from './components/LeftPanel'
+import RightPanel from './components/RightPanel'
 
 type Layout = 'IDLE' | 'ACTIVE'
 
@@ -20,22 +21,19 @@ function AppInner() {
   }, [state.status])
 
   return (
-    <div className="w-screen h-screen bg-jarvis-bg text-white font-inter">
-      {/* Session 8 visual test — replaced by full layout in Session 9 */}
-      <div className="w-full h-3/4">
+    <div className="w-screen h-screen bg-jarvis-bg text-white font-inter overflow-hidden">
+      {layout === 'IDLE' ? (
         <SphereCanvas mode="fullscreen" />
-      </div>
-      <div className="w-full h-1/4 flex items-center gap-4 px-4">
-        <div className="w-[120px] h-[120px] flex-shrink-0">
-          <SphereCanvas mode="orb" />
+      ) : (
+        <div className="flex h-full">
+          <div className="w-1/3 h-full">
+            <LeftPanel connected={connected} />
+          </div>
+          <div className="w-2/3 h-full">
+            <RightPanel />
+          </div>
         </div>
-        <div className="flex-1 h-full">
-          <WaveformCanvas />
-        </div>
-        <div className="text-jarvis-cyan font-orbitron text-xs tracking-wider opacity-70 flex-shrink-0">
-          {connected ? state.status : 'DISCONNECTED'}
-        </div>
-      </div>
+      )}
     </div>
   )
 }
