@@ -80,16 +80,16 @@ Reference plans:
 
 ---
 
-## Session 7 — Frontend Setup & Foundation
+## Session 7 — Frontend Setup & Foundation ✓
 
-- [ ] Scaffold Vite + React + TypeScript project in `frontend/`
-- [ ] Install and configure Tailwind CSS v4 + JARVIS colour palette + Orbitron font
-- [ ] `frontend/src/types.ts` — JarvisStatus, ResultItem, WsMessage, JarvisState types
-- [ ] `frontend/src/context/JarvisContext.tsx` — useReducer + Context + useJarvis hook
-- [ ] `frontend/src/hooks/useWebSocket.ts` — native WS, reconnect, dispatch to reducer
-- [ ] `frontend/src/hooks/useMouseActivity.ts` — mousemove debounce hook
-- [ ] Configure Vite proxy for `/ws` → `http://localhost:8000`
-- [ ] Smoke test: `npm run dev` starts, no TS errors
+- [x] Scaffold Vite + React + TypeScript project in `frontend/`
+- [x] Install and configure Tailwind CSS v4 + JARVIS colour palette + Orbitron font
+- [x] `frontend/src/types.ts` — JarvisStatus, ResultItem, WsMessage, JarvisState types
+- [x] `frontend/src/context/JarvisContext.tsx` — useReducer + Context + useJarvis hook
+- [x] `frontend/src/hooks/useWebSocket.ts` — native WS, reconnect, dispatch to reducer
+- [x] `frontend/src/hooks/useMouseActivity.ts` — mousemove debounce hook
+- [x] Configure Vite proxy for `/ws` → `http://localhost:8000`
+- [x] Smoke test: `npm run dev` starts, no TS errors
 
 ---
 

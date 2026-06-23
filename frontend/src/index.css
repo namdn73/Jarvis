@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-jarvis-bg: #000000;
+  --color-jarvis-panel: #080d14;
+  --color-jarvis-cyan: #00c9ff;
+  --color-jarvis-blue: #1ac6ff;
+  --color-jarvis-border: rgba(0, 201, 255, 0.25);
+  --color-jarvis-glow: rgba(0, 201, 255, 0.12);
+
+  --font-orbitron: 'Orbitron', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+
+  --animate-fade-in: fadeIn 0.5s ease-in-out;
+  --animate-glow-pulse: glowPulse 2s ease-in-out infinite;
+  --animate-slide-in-right: slideInRight 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(0, 201, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(0, 201, 255, 0.7);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
