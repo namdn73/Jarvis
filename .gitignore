@@ -38,3 +38,6 @@ desktop.ini
 .vscode/
 *.swp
 *.swo
+
+# Chat History
+ChatHistory/
